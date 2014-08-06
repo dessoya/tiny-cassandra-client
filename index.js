@@ -2,9 +2,15 @@
 
 var Class			= require('class')
   , Connection		= require('./Connection.js')
+  , net				= require('net')
+
+var net_socketCreator = function() {
+	return new net.Socket()
+}
 
 var Client = Class.inherit({
-	onCreate: function(config, readyCallback) {
+	onCreate: function(config, readyCallback, socketCreator) {
+		socketCreator = socketCreator || net_socketCreator
 		this.readyCallback = readyCallback
 		this.config = config
 		var connections = this.connections = []
@@ -14,7 +20,7 @@ var Client = Class.inherit({
 			for (var j = 0; j < hostCount && i < c; i++, j++) {
 				var host = hosts[j]
 				var connectionConfig = { host: host, port: 9042, index: i, keyspace: config.keyspace }
-				var connection = Connection.create(connectionConfig, this)
+				var connection = Connection.create(connectionConfig, this, socketCreator)
 				connections.push(connection)
 			}
 		}

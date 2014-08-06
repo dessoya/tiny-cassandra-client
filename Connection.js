@@ -1,7 +1,6 @@
 'use strict'
 
 var Class			= require('class')
-  , net				= require('net')
   , util			= require('util')
   , consts			= require('./consts.js')
   , opcodes			= consts.opcodes
@@ -16,9 +15,10 @@ var maxChannelId = 32
 
 var Connection = Class.inherit({
 
-	onCreate: function(config, parent) {
+	onCreate: function(config, parent, socketCreator) {
 		this.config = config
 		this.parent = parent
+		this.socketCreator = socketCreator
 		this.connected = false
 
 		var availChannels = this.availChannels = []
@@ -39,7 +39,7 @@ var Connection = Class.inherit({
     	this.connected = false
 		this.connecting = true
 
-		this.socket = new net.Socket()
+		this.socket = this.socketCreator()
 
 		this.readState = 0
 		this.incomingBuffer = new Buffer(0)

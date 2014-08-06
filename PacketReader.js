@@ -138,7 +138,6 @@ var PacketReader = Class.inherit({
 				var itemType = typeInfo[1]
 			    var totalItems = this.buffer.readUInt16BE(this.pos, true)
 				this.pos += 2
-				// console.log('list len '+totalItems)
 				for(var i = 0; i < totalItems; i++) {
 			    	bytes = this.buffer.readUInt16BE(this.pos, true)
 					this.pos += 2
